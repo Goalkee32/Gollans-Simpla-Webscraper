@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import time
+import json
 
 def hitta_nyheter():
     html_text = requests.get('https://www.elbruk.se/').text
@@ -16,6 +17,17 @@ def hitta_nyheter():
         print(f'Fil sparad: {index}')
 
         print('')
+
+    with open('nyheter/1.txt') as file, open('pris.json', 'w') as json_file:
+        items = {}
+        for line in file:
+            if not line.strip():
+                continue
+            data = line.split('|')
+            for val in data:
+                key, sep, value = val.partition(':')
+                items[key.strip()] = value.strip()
+        json.dump(items, json_file, indent=4)
 
 if __name__ == '__main__':
     while True:
